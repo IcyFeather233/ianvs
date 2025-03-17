@@ -102,3 +102,7 @@ Or you can replace the file in `yourpath/anaconda3/envs/ianvs/lib/python3.x/site
 ### Subjective
 
 `ianvs -f examples/government/singletask_learning_bench/subjective/benchmarkingjob.yaml`
+
+### RAG
+
+`ianvs -f examples/government/singletask_learning_bench/rag/benchmarkingjob.yaml`

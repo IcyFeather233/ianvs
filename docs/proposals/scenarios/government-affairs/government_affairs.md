@@ -16,6 +16,12 @@ With the rapid adoption of AI in public sectors, domain-specific large language 
   - Provincial government portals (e.g., Zhejiang "Zhejiang Ban")
   - Policy documents from 34 provincial-level regions
   - Localized service catalogs (social security, tax, etc.)
+- **Data Processing**:
+  - Search more data from the internet
+  - Use LLM to augment the data
+  - Text splitting with configurable chunk size and overlap
+  - Document embedding using Hugging Face models
+  - Vector storage in Chroma database
 
 ### 3.2 Benchmark Design
 | Test Scenario | Knowledge Scope |
@@ -24,41 +30,97 @@ With the rapid adoption of AI in public sectors, domain-specific large language 
 | Cross-region Service | All provinces |
 
 ### 3.3 RAG Implementation
-Integrate the following components into Ianvs:
-- **Knowledge Indexing Module**
-  - Hierarchical storage for provincial/national data
-  - FAISS-based vector databases
-- **Retrieval Strategies**
-  - Sparse-dense hybrid search (BM25 + DPR)
-  - Location-aware semantic routing
-- **Response Generator**
-  - Model-agnostic interface supporting LLaMA/GPT/DeepSeek
+
+Here is a architecture diagram of the RAG implementation to help you understand what is RAG:
+
+<img src="./assets/rag.png" alt="RAG Architecture" width="400"/>
+
+Here we only use the native RAG implementation in Ianvs, however, other RAG implementations can be easily integrated into Ianvs in the similar way.
+
+The RAG implementation leverages LangChain and includes:
+
+- **Knowledge Base Management**
+  - Automatic initialization and loading of vector store
+  - Support for incremental updates to the knowledge base
+  - Document change detection to avoid unnecessary reprocessing
+  - Persistent storage of embeddings
+
+- **Vector Store**
+  - Chroma as the vector store backend
+  - Efficient similarity search for relevant context
+  - Automatic embedding generation using Hugging Face models
+
+- **Retrieval Process**
+  - Query-based document retrieval
+  - Context integration into LLM prompts
+  - Configurable retrieval parameters (k documents, chunk size)
 
 ## 4. Technical Implementation
 ### 4.1 System Architecture
-<img src="./assets/rag.png" width="200">
+The RAG system is integrated into the existing Ianvs framework with the following components:
+
+1. **Document Processing Pipeline**
+   - Text splitting with configurable chunk size and overlap
+   - Document embedding using Hugging Face models
+   - Vector storage in Chroma database
+
+2. **Inference Pipeline**
+   - Query analysis
+   - Context retrieval from vector store
+   - Context-enhanced prompt construction
+   - LLM response generation
+
+3. **Optimization Features**
+   - Document hashing for change detection
+   - Persistent vector store
+   - Error handling and logging
 
 ### 4.2 Key Innovations
-1. **Context-Aware Benchmarking**:  
-   Aligns with the Contextual Benchmark Method by evaluating models under three governance scenarios:
-   - Local policy compliance (province-specific)
-   - National standard interpretation (cross-province)
+1. **Automatic Knowledge Base Management**
+   - Self-initializing vector store
+   - Incremental document processing
+   - Hash-based change detection
 
-2. **Edge-Optimized RAG**:
-   - smaller index size through province-based sharding
-   - Conduct effectiveness tests using different knowledge bases for various edge nodes.
-
+2. **Edge-Optimized RAG**
+   - Configurable embedding models
+   - Persistent local storage
+   - Resource-efficient retrieval
 
 ## 5. Expected Outcomes
-1. **Ianvs Integration**:
-   - New `llm_rag_benchmark` module
-   - Comparative analysis dashboard for RAG strategies
+1. **Ianvs Integration**
+   - Fully integrated RAG capabilities in the benchmark
+   - Comparative performance metrics with and without RAG
 
-2. **Performance Guidelines**:
-   - Model selection matrix based on provincial needs
-   - Optimal RAG configuration templates
+2. **Performance Guidelines**
+   - Optimal configuration recommendations
+   - Best practices for knowledge base management
 
-## 6. Timeline
+## 6. Implementation Details
+
+### 6.1 Configuration
+Users can configure the RAG system by modifying the following parameters:
+```python
+# RAG配置
+KNOWLEDGE_BASE_PATH = "/path/to/your/knowledge/base"  # 知识库文档路径
+VECTOR_STORE_PATH = "/path/to/vector/store"  # 向量存储路径
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # 使用的embedding模型
+```
+
+### 6.2 Document Processing
+Documents are processed using the following pipeline:
+1. Text files are loaded from the knowledge base directory
+2. Documents are split into chunks using CharacterTextSplitter
+3. Chunks are embedded using the specified embedding model
+4. Embeddings are stored in a Chroma vector store
+
+### 6.3 Inference Process
+During inference:
+1. The user query is extracted from the input
+2. Relevant context is retrieved from the vector store
+3. Context is added to the system message
+4. The LLM generates a response considering both the query and context
+
+## 7. Timeline
 | Phase | Dates | Deliverables |
 |-------|-------|--------------|
 | Data Collection | Mar 3-21 | Provincial knowledge corpus |
