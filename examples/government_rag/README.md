@@ -7,10 +7,39 @@ This example demonstrates how to use Retrieval-Augmented Generation (RAG) techno
 1. Supports multiple document formats (txt, docx)
 2. Uses LangChain for document processing and retrieval
 3. Implements four test modes:
-   - Type 1: No RAG mode
-   - Type 2: Uses only data related to the tested edge node as the RAG knowledge base
-   - Type 3: Uses data from all edge nodes as the RAG knowledge base
-   - Type 4: Uses data unrelated to the tested edge node as the RAG knowledge base
+   - Type 1 - Model: No RAG mode
+   - Type 2 - Global: Uses only data related to the tested edge node as the RAG knowledge base
+   - Type 3 - Local: Uses data from all edge nodes as the RAG knowledge base
+   - Type 4 - Other: Uses data unrelated to the tested edge node as the RAG knowledge base
+
+## Test Methodology
+
+In terms of experimental design, for evaluating the effectiveness of LLM + RAG solutions on Government data, we believe there should be three comparisons:
+
+1. MODEL: LLM only
+2. GLOBAL: LLM + RAG (only knowledge data relevant to edge question)
+3. LOCAL: LLM + RAG (all knowledge data)
+4. OTHER: LLM + RAG (all knowledge data not relevant to edge question)
+
+Taking "Beijing" as an example of a tested provincial edge node, there are four experimental settings:
+
+| Category | Tested Node | Knowledge Base | Representative Capability |
+|----------|-------------|----------------|--------------------------|
+| Type 1 (MODEL)   | Beijing     | No knowledge base, no RAG | Basic capability of large models without knowledge base |
+| Type 2 (GLOBAL)   | Beijing     | Beijing's relevant knowledge base | Model's ability to learn from knowledge base |
+| Type 3 (LOCAL)   | Beijing     | Knowledge base from all provinces and autonomous regions | Model's ability to search for relevant knowledge |
+| Type 4 (OTHER)   | Beijing     | Knowledge base from all provinces except Beijing | Model's ability to generalize knowledge |
+
+For evaluation metrics, we believe that due to the difficulty in controlling variables such as knowledge base quality across different provinces, metrics between different provinces (edge nodes) are not directly comparable.
+
+For each region's evaluation, we have four experimental designs (Type 1, 2, 3, 4). We use Accuracy as the metric to calculate scores, and then take the average of the four experimental scores as the final government capability score for that region.
+
+- Type 1 evaluates the LLM's basic capability without any knowledge base assistance.
+- Type 2, using only knowledge base relevant to the edge node, evaluates the LLM's ability to learn from the knowledge base.
+- Type 3, using the complete knowledge base, evaluates the LLM's ability to retrieve relevant knowledge.
+- Type 4, using knowledge base unrelated to the edge node, evaluates the LLM's ability to generalize knowledge.
+
+**Note: This benchmark design has limitations and can only partially reflect different large models' capabilities in handling government affairs across different provinces. The results are for reference only and cannot fully accurately reflect a model's government affairs capability.**
 
 ## Usage
 
@@ -75,4 +104,4 @@ The visualization of the average scores for each edge node is as follows:
 ![](./assets/ernie_speed_radar_plot.png)
 ![](./assets/ernie-tiny-8k_radar_plot.png)
 
-It can be observed that, overall, Deepseek performs the best, followed by LLaMA3-8B and ernie_speed with similar performance, while ernie-tiny-8k performs the worst. Additionally, when the model itself is already strong (Deepseek), the effect of RAG is relatively weaker. When the model’s performance is moderate, RAG has a more significant impact. For models with poor performance, the effect of RAG is unstable. The general trend is Local RAG > Global RAG > Model > Other RAG. However, there are exceptions where using Other RAG can outperform the Model, indicating that policy documents from different edge nodes may have some correlation, leading to some performance gains. However, these gains are not consistent and can sometimes have a negative impact due to differences in policies across edge nodes.
+It can be observed that, overall, Deepseek performs the best, followed by LLaMA3-8B and ernie_speed with similar performance, while ernie-tiny-8k performs the worst. Additionally, when the model itself is already strong (Deepseek), the effect of RAG is relatively weaker. When the model's performance is moderate, RAG has a more significant impact. For models with poor performance, the effect of RAG is unstable. The general trend is Local RAG > Global RAG > Other RAG > Model. Usually, using Other RAG can outperform the Model, indicating that policy documents from different edge nodes may have some correlation, leading to some performance gains. However, when the model performs bad, these gains are not consistent and can sometimes have a negative impact due to differences in policies across edge nodes.
