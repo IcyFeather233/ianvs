@@ -59,9 +59,9 @@ def acc_model(y_true, y_pred):
         if real_y_pred[i] == real_y_true[i]:
             province_acc[province]["correct"] += 1
 
-    print("\n=== 准确率统计 ===")
-    print(f"全局准确率: {global_acc:.4f}")
-    print("\n各省份准确率:")
+    print("\n=== Accuracy Statistics ===")
+    print(f"Global Accuracy: {global_acc:.4f}")
+    print("\nProvince Accuracies:")
     for province, stats in province_acc.items():
         acc = stats["correct"] / stats["total"]
         print(f"{province}: {acc:.4f} ({stats['correct']}/{stats['total']})")
@@ -120,9 +120,9 @@ def acc_global(y_true, y_pred):
         if real_y_pred[i] == real_y_true[i]:
             province_acc[province]["correct"] += 1
 
-    print("\n=== 准确率统计 ===")
-    print(f"全局准确率: {global_acc:.4f}")
-    print("\n各省份准确率:")
+    print("\n=== Accuracy Statistics ===")
+    print(f"Global Accuracy: {global_acc:.4f}")
+    print("\nProvince Accuracies:")
     for province, stats in province_acc.items():
         acc = stats["correct"] / stats["total"]
         print(f"{province}: {acc:.4f} ({stats['correct']}/{stats['total']})")
@@ -181,9 +181,9 @@ def acc_local(y_true, y_pred):
         if real_y_pred[i] == real_y_true[i]:
             province_acc[province]["correct"] += 1
 
-    print("\n=== 准确率统计 ===")
-    print(f"全局准确率: {global_acc:.4f}")
-    print("\n各省份准确率:")
+    print("\n=== Accuracy Statistics ===")
+    print(f"Global Accuracy: {global_acc:.4f}")
+    print("\nProvince Accuracies:")
     for province, stats in province_acc.items():
         acc = stats["correct"] / stats["total"]
         print(f"{province}: {acc:.4f} ({stats['correct']}/{stats['total']})")
@@ -242,9 +242,9 @@ def acc_other(y_true, y_pred):
         if real_y_pred[i] == real_y_true[i]:
             province_acc[province]["correct"] += 1
 
-    print("\n=== 准确率统计 ===")
-    print(f"全局准确率: {global_acc:.4f}")
-    print("\n各省份准确率:")
+    print("\n=== Accuracy Statistics ===")
+    print(f"Global Accuracy: {global_acc:.4f}")
+    print("\nProvince Accuracies:")
     for province, stats in province_acc.items():
         acc = stats["correct"] / stats["total"]
         print(f"{province}: {acc:.4f} ({stats['correct']}/{stats['total']})")
